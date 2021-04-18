@@ -1,8 +1,43 @@
 {
   "aluno": [
-   
+    {
+      "id": 1,
+      "nome": "Rodrigo2",
+      "email": "asdasd@gmail.com",
+      "endereco": {
+        "cep": "34590100",
+        "numero": "200",
+        "complemento": "casa",
+        "rua": "Rua Equador",
+        "bairro": "Nações Unidas",
+        "cidade": "Sabará",
+        "estado": "MG"
+      },
+      "requisitos": {
+        "inscricao": "s",
+        "date": "2013-01-01",
+        "habilidade": true,
+        "habilidade2": null,
+        "habilidade3": null
+      },
+      "termos": {
+        "termos": "null"
+      }
+    }
   ],
   "professor": [
-   
+    {
+      "nome": "Rodrigo",
+      "email": "teste@gmail.com",
+      "endereco": {
+        "cep": "34590100",
+        "numero": "200",
+        "rua": "Rua Equador",
+        "bairro": "Nações Unidas",
+        "cidade": "Sabará",
+        "estado": "MG"
+      },
+      "id": 1
+    }
   ]
 }
