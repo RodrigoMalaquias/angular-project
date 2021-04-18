@@ -1,11 +1,14 @@
-<nav *ngIf="mostrarMenu" class="navbar navbar-expand-sm bg-light navbar-light">
+<nav *ngIf="mostrarMenu" class="navbar navbar-expand-sm bg-light navbar-light ">
   <a routerLink=""  class="navbar-brand">Concert</a>
   <ul class="navbar-nav ml-auto">
     <li class="nav-item" routerLinkActive="active" >
       <a routerLink="/professor" class="nav-link" #loginNav>Professor</a>
     </li>
     <li class="nav-item" routerLinkActive="active" >
-      <a routerLink="/aluno" class="nav-link" #loginNav>Aluno</a>
+      <a routerLink="/professor-lista" class="nav-link" #loginNav>Professor-Lista</a>
+    </li>
+    <li class="nav-item" routerLinkActive="active" >
+      <a routerLink="/aluno-lista" class="nav-link" #loginNav>Aluno</a>
     </li>
     <li class="nav-item logout active" routerLinkActive="active" >
       <a routerLink="/login" class="nav-link" #loginNav>Logout</a>

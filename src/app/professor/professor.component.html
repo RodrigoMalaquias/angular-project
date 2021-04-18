@@ -1,4 +1,4 @@
-<form #f="ngForm" (ngSubmit)="onSubmit(f)"  class="needs-validation was-validated" novalidate
+<form #f="ngForm" (ngSubmit)="onSubmit(f.value)"  class="needs-validation was-validated" novalidate
 class="form-horizontal">
   <div class="form-group row" [ngClass]="aplicaCssErro(nome)">
 
@@ -10,7 +10,7 @@ class="form-horizontal">
     <div class="col-sm-12 ">
       <input type="text" class="form-control"
       id="nome" placeholder="Nome"
-      name="nome" [ngModel]="usuario.nome"
+      name="nome" [ngModel]="professor.nome"
       required #nome="ngModel">
       <!--div>
         {{ nome.className }}
@@ -29,7 +29,7 @@ class="form-horizontal">
       </div>
       <div class="col-sm-12">
           <input type="email" class="form-control" id="email"
-          placeholder="nome@email.com" name="email" [ngModel]="usuario.email"
+          placeholder="nome@email.com" name="email" [ngModel]="professor.email"
           required email #email="ngModel" >
           <app-campo-control-erro
           [mostrarErro]="verificaValidTouched(email)"

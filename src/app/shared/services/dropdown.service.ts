@@ -21,7 +21,7 @@ export class DropdownService {
   //   ];
   // }
 
-  getHabilitacao(){
+  getInscricao(){
     return [
       { valor: 's', desc: 'Sim' },
       { valor: 'n', desc: 'Não' }

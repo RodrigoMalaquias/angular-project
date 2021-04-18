@@ -5,7 +5,8 @@
     </div>
 
     <div class="col-sm-12 ">
-      <input type="text" class="form-control" id="nome" placeholder="Nome" formControlName="nome">
+      <input type="text" class="form-control" id="nome" placeholder="Nome" formControlName="nome"
+      [ngClass]="aplicaCssErro('nome')">
 
     </div>
 
@@ -16,19 +17,20 @@
       <label for="email" class="form-label">Email</label>
     </div>
     <div class="col-sm-12">
-      <input type="email" class="form-control" id="email" placeholder="nome@email.com" formControlName="email">
+      <input type="email" class="form-control" id="email" placeholder="nome@email.com" formControlName="email"
+      [ngClass]="aplicaCssErro('email')">
     </div>
   </div>
 
   <div formGroupName="endereco">
     <div class="form-group row">
 
-      <div class="col-sm-3" [ngClass]="aplicaCssErro('endereco.cep')">
+      <div class="col-sm-3 cep">
         <label for="cep" class="control-label">CEP</label>
         <input type="text" class="form-control" id="cep" formControlName="cep" (blur)="consultaCEP()">
       </div>
 
-      <div class="col-sm-3" [ngClass]="aplicaCssErro('endereco.numero')">
+      <div class="col-sm-3">
         <label for="numero" class="control-label">Número</label>
         <input type="text" class="form-control" id="numero" formControlName="numero">
       </div>
@@ -41,7 +43,7 @@
 
     <div class="form-group row">
 
-      <div class="col-sm-12" [ngClass]="aplicaCssErro('endereco.rua')">
+      <div class="col-sm-12">
         <label for="rua" class="control-label">Rua</label>
       </div>
       <div class="col-sm-12">
@@ -52,7 +54,7 @@
 
     <div class="form-group row">
 
-      <div class="col-sm-5" [ngClass]="aplicaCssErro('endereco.bairro')">
+      <div class="col-sm-5">
         <label for="bairro" class="control-label">Bairro</label>
         <input type="text" class="form-control" id="bairro" formControlName="bairro">
       </div>
@@ -72,13 +74,13 @@
 
   </div>
 
-  <div formGroupName="endereco">
+  <div formGroupName="requisitos">
     <div class="form-group row">
       <div class="col-sm-6">
-        <label for="habilitacao" class="control-label">Deseja inscrever?</label>
-        <div class="col-sm-4" *ngFor="let item of habilitacaoConfirm">
+        <label for="inscricao" class="control-label">Deseja inscrever?</label>
+        <div class="col-sm-4" *ngFor="let item of inscricaoConfirm">
           <label class="radio">
-            <input name="cnh" type="radio" [value]="item.valor" formControlName="habilitacao"> {{ item.desc }}
+            <input name="inscricao" type="radio" [value]="item.valor" formControlName="inscricao"> {{ item.desc }}
           </label>
         </div>
       </div>
@@ -95,9 +97,9 @@
         <label for="habilidade" class="control-label">Habilidades</label>
         <div class="col-sm-6">
           <label class="habilidade">
-            <input type="checkbox" id="habilidade" name="habilidade" checked> Criativo
-            <input type="checkbox" id="habilidade2" name="habilidade2"> Líder
-            <input type="checkbox" id="habilidade3" name="habilidade3"> Empatia
+            <input type="checkbox" id="habilidade" name="habilidade" checked formControlName="habilidade"> Criativo
+            <input type="checkbox" id="habilidade2" name="habilidade2" formControlName="habilidade2"> Líder
+            <input type="checkbox" id="habilidade3" name="habilidade3" formControlName="habilidade3"> Empatia
           </label>
         </div>
       </div>
@@ -108,7 +110,7 @@
 
   <!-- <div class="col-md-4" [ngClass]="aplicaCssErro('habilitacao')"> -->
 
-
+    <div formGroupName="termos">
     <div class="form-group row">
       <div class="col-md-3">
         <div class="checkbox">
@@ -119,6 +121,7 @@
         </div>
       </div>
     </div>
+  </div>
 
     <!-- <app-campo-control-erro
       [mostrarErro]="!formulario.get('termos'.valid)"
@@ -126,7 +129,8 @@
     </app-campo-control-erro> -->
     <!-- [ngClass]="aplicaCssErro('termos') -->
 
-  <button type="submit" class="btn btn-primary" [disabled]="!alunoForm.valid" >Submit</button>
+  <button type="submit" class="btn btn-primary">Enviar</button>
   <button class="btn btn-secondary" (click)="resetar()">Cancelar</button>
+  <button type="button" class="btn btn-info" routerLink="/aluno-lista" (click)="onSubmit()">Lista de alunos</button>
 
 </form>

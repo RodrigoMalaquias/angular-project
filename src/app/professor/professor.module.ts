@@ -7,6 +7,7 @@ import { ProfessorRoutingModule } from './professor-routing.module';
 import { ProfessorComponent } from './professor.component';
 import { FormsModule } from '@angular/forms';
 import { CampoControlErroComponent } from '../campo-control-erro/campo-control-erro.component';
+import { ProfessorListaComponent } from './professor-lista/professor-lista.component';
 
 @NgModule({
   declarations: [

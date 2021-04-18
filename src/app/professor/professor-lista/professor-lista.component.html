@@ -1,0 +1,71 @@
+<div class="card mt-3">
+    <div class="card-header">
+      <div class="float-left">
+        <h4>Professor</h4>
+      </div>
+      <div class="float-right">
+        <button type="button" class="btn btn-primary" routerLink="/professor">Novo Professor</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover " *ngIf = "professores$ | async as professores; else loadingError">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Professor</th>
+            <th>E-mail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor = "let professor of professores">
+            <td>{{ professor.id }}</td>
+            <td>{{ professor.nome }}</td>
+            <td>{{ professor.email }}</td>
+            <td>
+              <span class="float-right">
+                <button class="btn btn-outline-warning mb-1 btn-sm" (click)="onEdit(professor.id)">
+                  Atualizar
+                </button>
+  
+                <button class="btn btn-outline-danger mb-1 btn-sm" (click)="onDelete(professor)">
+                  Remover
+                </button>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <ng-template #loadingError>
+        <div *ngIf="error$ | async; else loading">  
+          Erro ao carregar professores. Tente depois!
+        </div>
+      </ng-template>
+      <ng-template #loading>
+        <div class="spinner-border text-secondary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </ng-template>
+      
+      
+  
+      <!--ng-template #loadingError>
+        <div *ngIf="error$ | async; else loading" >
+          Erro ao carregar cursos. Tente novamente mais tarde.
+        </div>
+        <ng-template #loading>
+            <span>Carregando Cursos...</span>
+        </ng-template>
+      </ng-template -->
+    </div>
+  </div>
+  
+  <ng-template #deleteModal>
+    <div class="modal-body text-center">
+      <p>Tem certeza que deseja remover esse curso?</p>
+      <button type="button" class="btn btn-danger" (click)="onConfirmDelete()">Sim</button>
+      <button type="button" class="btn btn-primary" (click)="onDeclineDelete()">Nao</button>
+    </div>
+  </ng-template>
+
+  

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { EstadosBr } from '../shared/models/estados-br';
 import { ConsultaCepService } from '../shared/services/consulta-cep.service';
 import { DropdownService } from './../shared/services/dropdown.service';
@@ -8,6 +8,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ValueTransformer } from '@angular/compiler/src/util';
 import { FormValidations } from '../shared/form-validations';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { AlertModalComponent } from '../shared/alert-modal/alert-modal.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlunoService } from './aluno.service';
+import { aluno } from './aluno';
+
 
 
 @Component({
@@ -20,31 +26,68 @@ export class AlunoComponent implements OnInit {
 
   estados: Observable<EstadosBr[]>;
   // cargos: any[];
-  habilitacaoConfirm: any[];
+  inscricaoConfirm: any[];
   dataZerada: string = "";
   informarErro : boolean = false;
+  bsModalRef: BsModalRef;
+  teste : boolean = false;
   
 
   constructor(
     private http: HttpClient,
     private formBuilder: FormBuilder,
     private dropdownService: DropdownService,
-    private cepService: ConsultaCepService
+    private cepService: ConsultaCepService,
+    private modalService: BsModalService,
+    private route: ActivatedRoute,
+    private alunoService: AlunoService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+
+
+    // this.route.params.subscribe
+    // (
+    //   (params : any)=>{
+    //     const id = params['id'];
+    //     console.log(id);
+    //     const aluno$ = this.alunoService.loadById(id);
+    //     aluno$.subscribe(aluno => {
+    //       this.updateForm(aluno);
+    //     });
+    //   }
+    // )
+
+      //Buscará o id apenas quando se tratar de uma pagina de atualização
+      if(this.router.url != "/aluno"){
+        console.log(this.router.url);
+        this.route.params.pipe(
+          map((params: any) => params['id']),
+          switchMap(id => this.alunoService.loadById(id))
+        ).subscribe
+        (
+          aluno => this.updateForm(aluno));
+      }
+      
+    
+    
+    
+
     // this.dropdownService.getEstadosBr()
     //   .subscribe(dados => this.estados = dados);
     //   console.log();
 
     this.estados = this.dropdownService.getEstadosBr();
     // this.cargos = this.dropdownService.getCargos();
-    this.habilitacaoConfirm = this.dropdownService.getHabilitacao();
+    this.inscricaoConfirm = this.dropdownService.getInscricao();
+
+    // const aluno = this.route.snapshot.data['aluno'];
 
     this.alunoForm = this.formBuilder.group({
-      nome: ["", [Validators.required]],
+      id: [null],
+      nome: [null, [Validators.required]],
       email: [null, [Validators.required, Validators.email]],
-      confirmaEmail: [null, [Validators.required, Validators.email]],
 
       endereco: this.formBuilder.group({
         cep: [null, Validators.required],
@@ -55,27 +98,78 @@ export class AlunoComponent implements OnInit {
         cidade: [null, Validators.required],
         estado: [null, Validators.required],
       }),
-      habilitacaoConfirm: ["s"],
-      // termos: [null, Validators.pattern()]
+      requisitos: this.formBuilder.group({
+        inscricao: [null, Validators.required],
+        date: [null, Validators.required],
+        habilidade: [null],
+        habilidade2: [null],
+        habilidade3: [null]
+      }),
+      termos: this.formBuilder.group({
+        termos: ['null',Validators.required]
+      })
     });
+    console.log(this.alunoForm.value.id);
+  }
+
+  updateForm(aluno){
+    console.log(aluno.endereco.cep);
+    this.alunoForm.patchValue({
+      id: aluno.id,
+      nome: aluno.nome,
+      email: aluno.email,
+      endereco: ({
+        cep: aluno.endereco.cep,
+        numero: aluno.endereco.numero,
+        complemento: aluno.endereco.complemento,
+        rua: aluno.endereco.rua,
+        bairro: aluno.endereco.bairro,
+        cidade: aluno.endereco.cidade,
+        estado: aluno.endereco.estado
+      }),
+      requisitos: ({
+        inscricao: aluno.requisitos.inscricao,
+        date: aluno.requisitos.date,
+        habilidade: aluno.requisitos.habilidade,
+        habilidade2: aluno.requisitos.habilidade2,
+        habilidade3: aluno.requisitos.habilidade3
+      }),
+      termos: ({
+        termos: aluno.termos.termos
+      })
+    })
   }
 
   onSubmit() {
-    if (this.alunoForm.valid) {
-      this.http
-        .post("https://httpbin.org/post", JSON.stringify(this.alunoForm.value))
-        .pipe(map((dados) => dados))
-        .subscribe(
-          (dados) => {
-            console.log(dados);
-            //this.alunoForm.reset();
-          },
-          (error: any) => alert("erro")
-        );
-      //resetando o formulario);
+    if (this.alunoForm.valid && this.alunoForm) {
+      this.alunoService.save(this.alunoForm.value).subscribe(
+        succes =>{
+          this.handleSucess();
+          this.router.navigateByUrl("/aluno-lista")
+        }
+      );
+      // if(this.alunoForm.value.id){
+      //   console.log("pegou id");
+      //   //update
+      //   this.alunoService.update(this.alunoForm.value).subscribe(
+      //     success =>{
+      //       this.handleSucess();
+      //       this.router.navigateByUrl("/aluno-lista")
+      //     }
+      //   );
+      // }else{
+      //   this.alunoService.create(this.alunoForm.value).subscribe(
+      //     success =>{
+      //       this.handleSucess();
+      //       this.router.navigateByUrl("/aluno-lista")
+      //     }
+      //   );
+      // }
+      
     } else {
       console.log("Formulario Invalido");
       this.verificaValidacoesForm(this.alunoForm);
+      this.handleError();
     }
     console.log(this.alunoForm.value);
   }
@@ -155,4 +249,17 @@ export class AlunoComponent implements OnInit {
     }
     return validator;
   };
+
+  handleError(){
+    this.bsModalRef = this.modalService.show(AlertModalComponent);
+    this.bsModalRef.content.type = 'danger';
+    this.bsModalRef.content.message = 'Erro de execução, tente novamente!';
+  }
+
+  handleSucess(){
+    this.bsModalRef = this.modalService.show(AlertModalComponent);
+    this.bsModalRef.content.type = 'success';
+    this.bsModalRef.content.message = 'Execução Completa!';
+  }
+
 }

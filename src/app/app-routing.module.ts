@@ -21,6 +21,14 @@ const routes: Routes = [
     path: 'aluno',
     loadChildren:() => import("./aluno/aluno.module").then(m => m.AlunoModule)
   },
+  {
+    path: 'professor-lista',
+    loadChildren:() => import("./professor/professor-lista/professor-lista.module").then(m => m.ProfessorListaModule)
+  },
+  {
+    path: 'aluno-lista',
+    loadChildren:() => import("./aluno/aluno-lista/aluno-lista.module").then(m => m.AlunoListaModule)
+  },
   { 
     path: '', redirectTo: '/home', pathMatch: 'full'
   },

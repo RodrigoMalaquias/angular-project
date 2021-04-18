@@ -3,7 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
+import { professor } from './professor';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { AlertModalComponent } from '../shared/alert-modal/alert-modal.component';
+import { ProfessorService } from './professor.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-professor',
@@ -12,30 +17,37 @@ import { map } from 'rxjs/operators';
 })
 export class ProfessorComponent implements OnInit {
 
-  usuario: any = {
+  bsModalRef: BsModalRef;
+  idRota: string = ""
+  professor: professor = {
+    id: null,
     nome: null,
     email: null
   }
 
   constructor(
     private http: HttpClient,
-    private cepService: ConsultaCepService
+    private cepService: ConsultaCepService,
+    private modalService: BsModalService,
+    private service: ProfessorService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+    console.log(this.idRota = this.route.snapshot.paramMap.get('id'))
+    console.log(this.idRota = this.route.snapshot.paramMap.get('email'))
   }
 
+
   onSubmit(formulario) {
-    console.log(formulario);
-
-    //console.log(this.usuario);
-
-    this.http.post('https://httpbin.org/post', JSON.stringify(formulario.value))
-      .pipe(map(dados => dados))
-      .subscribe(dados => {
-        console.log(dados);
-
-      });
+    console.log(formulario.id);
+      this.service.save(formulario, this.idRota).subscribe(
+        success =>{
+          this.handleSucess();
+          this.router.navigateByUrl("/professor-lista")
+        }
+      );
   }
 
   resetar(formulario) {
@@ -84,6 +96,18 @@ export class ProfessorComponent implements OnInit {
         estado: null
       }
     });
+  }
+
+  handleError(){
+    this.bsModalRef = this.modalService.show(AlertModalComponent);
+    this.bsModalRef.content.type = 'danger';
+    this.bsModalRef.content.message = 'Erro de execução, tente novamente!';
+  }
+
+  handleSucess(){
+    this.bsModalRef = this.modalService.show(AlertModalComponent);
+    this.bsModalRef.content.type = 'success';
+    this.bsModalRef.content.message = 'Execução Completa!';
   }
 
 }
